@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ficketmaster - Profile</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>Your Profile</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/events">Events</a>
+      <a href="/profile">Profile</a>
+    </nav>
+  </header>
+  
+  <main>
+    <section class="profile-details">
+      <h2>Profile Information</h2>
+      <p>Name: John Doe</p>
+      <p>Email: john.doe@example.com</p>
+      <p>Date of Birth: 1990-01-01</p>
+      <p>Bio: Hello, I'm John!</p>
+      <button id="edit-profile">Edit Profile</button>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

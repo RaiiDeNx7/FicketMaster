@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ficketmaster - Event Listings</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome to Ficketmaster</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/events">Events</a>
+      <a href="/profile">Profile</a>
+    </nav>
+  </header>
+  
+  <main>
+    <section class="event-list">
+      <h2>Available Events</h2>
+      <ul id="event-list">
+        <!-- Event list will be injected by JavaScript -->
+      </ul>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
+
