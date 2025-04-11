@@ -1,0 +1,10 @@
+Flask==2.3.2
+Flask-SQLAlchemy==3.1.1
+mysqlclient==2.2.4        # Use this if you're using MySQLdb (C-based)
+# OR use the one below if mysqlclient doesn't work:
+# PyMySQL==1.1.0
+
+Flask-Login==0.6.3        # For user authentication
+Flask-WTF==1.1.1          # For form handling and CSRF protection
+email-validator==2.1.0    # For validating email addresses
+Werkzeug==2.3.1           # For password hashing
