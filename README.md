@@ -2,6 +2,7 @@ READ ME
 
 
 Install:
+https://sqlitebrowser.org/dl/
 
 Run:
 
