@@ -14,11 +14,14 @@ db = SQLAlchemy(app)
 # Models
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-    email = db.Column(db.String(120), unique=True)
-    dob = db.Column(db.String(10))
-    bio = db.Column(db.String(250))
-    password = db.Column(db.String(128))
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    dob = db.Column(db.Date, nullable=False)
+    bio = db.Column(db.String(500), default="")
+    password = db.Column(db.String(100), nullable=False)  # Add password field
+
+    def __repr__(self):
+        return f'<User {self.name}>'
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
