@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ficketmaster - Event Listings</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <header>
@@ -12,11 +12,33 @@
     <nav>
       <a href="/">Home</a>
       <a href="/events">Events</a>
-      <a href="/profile">Profile</a>
+      {% if session.get('user_id') %}
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+      {% else %}
+        <a href="/login">Login</a>
+        <a href="/signup">Signup</a>
+      {% endif %}
     </nav>
   </header>
-  
+
   <main>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% if session.get('user_id') %}
+      <p class="welcome">You're logged in. Check out upcoming events below!</p>
+    {% else %}
+      <p class="welcome">Please login or signup to book events and view your profile.</p>
+    {% endif %}
+
     <section class="event-list">
       <h2>Available Events</h2>
       <ul id="event-list">
@@ -28,4 +50,3 @@
   <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
-
