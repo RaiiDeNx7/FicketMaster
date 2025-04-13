@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Ficketmaster</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>Ficketmaster</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/events">Events</a>
+      <a href="/profile">Profile</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="auth-form">
+      <h2>Login</h2>
+      <form method="POST">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+      <div class="form-footer">
+        <p>Don't have an account? <a href="/signup">Sign up here</a></p>
+      </div>
+    </div>
+
+    <div class="auth-benefits">
+      <h3>Why Use Ficketmaster?</h3>
+      <ul>
+        <li>🎟️ Easy ticket booking</li>
+        <li>📧 Event updates and reminders</li>
+        <li>📅 Manage your bookings in one place</li>
+      </ul>
+    </div>
+  </main>
+</body>
+</html>

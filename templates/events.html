@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ficketmaster - Book Event</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>Book Your Tickets</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/events">Events</a>
+      <a href="/profile">Profile</a>
+    </nav>
+  </header>
+  
+  <main>
+    <section class="event-booking">
+      <h2>Event Booking</h2>
+      <form id="booking-form">
+        <label for="tickets">Number of Tickets:</label>
+        <input type="number" id="tickets" name="tickets" required min="1">
+        <button type="submit">Book Tickets</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
+

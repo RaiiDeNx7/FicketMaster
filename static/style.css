@@ -1,0 +1,194 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* General Body Styling */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9fb;
+  color: #333;
+  line-height: 1.6;
+  padding-bottom: 40px;
+}
+
+/* Header */
+header {
+  background-color: #4a90e2;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+nav a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: #dceeff;
+}
+
+/* Main Content */
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Welcome Message */
+.welcome {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+/* Event List */
+.event-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.event-list li {
+  background: white;
+  margin: 10px 0;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Form Styling */
+form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+button {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #357abd;
+}
+
+/* Auth Forms */
+.auth-form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.auth-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Profile Page */
+.profile-details {
+  background-color: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.profile-details h2 {
+  margin-bottom: 15px;
+}
+
+.profile-details p {
+  margin: 8px 0;
+}
+
+#edit-profile {
+  margin-top: 15px;
+}
+
+/* Flashes */
+.flashes {
+  list-style: none;
+  padding: 10px;
+  background-color: #ffefc5;
+  border: 1px solid #ffda89;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.flashes li {
+  color: #8a6d3b;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  nav a {
+    display: block;
+    margin: 10px 0;
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  .auth-form,
+  .profile-details,
+  form {
+    padding: 15px;
+  }
+}
+
+.auth-benefits {
+  text-align: center;
+  padding-top: 80px;  /* Adjust this value to move it lower */
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.auth-benefits h3 {
+  font-size: 1.8em;
+  margin-bottom: 20px;
+}
+
+.auth-benefits ul {
+  list-style: none;
+  padding: 0;
+}
+
+.auth-benefits li {
+  margin: 10px 0;
+  font-size: 1.1em;
+}
+
+
+
