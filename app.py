@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+from datetime import datetime
+
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'your_secret_key_here'
@@ -59,7 +61,8 @@ def signup():
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
-        dob = request.form['dob']
+        dob_str = request.form['dob']
+        dob = datetime.strptime(dob_str, '%Y-%m-%d').date()
         password = request.form['password']
         bio = request.form.get('bio', '')
 
