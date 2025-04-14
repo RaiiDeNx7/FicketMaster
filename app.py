@@ -43,8 +43,21 @@ class Booking(db.Model):
 def index():
     return render_template('index.html')
 
-@app.route('/events')
+@app.route('/events', methods=['GET', 'POST'])
 def events_page():
+    if request.method == 'POST':
+        name = request.form['name']
+        date = request.form['date']
+        location = request.form['location']
+        tickets = int(request.form['tickets'])
+
+        new_event = Event(name=name, date=date, location=location, tickets_available=tickets)
+        db.session.add(new_event)
+        db.session.commit()
+        flash('New event created!')
+
+        return redirect(url_for('events_page'))
+
     all_events = Event.query.all()
     return render_template('events.html', events=all_events)
 

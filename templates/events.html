@@ -1,24 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ficketmaster - Book Event</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ficketmaster - Events</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <header>
-    <h1>Book Your Tickets</h1>
+    <h1>Ficketmaster - Events</h1>
     <nav>
       <a href="/">Home</a>
       <a href="/events">Events</a>
       <a href="/profile">Profile</a>
     </nav>
   </header>
-  
+
   <main>
+    <!-- Event Creation Form -->
+    <section class="event-form">
+      <h2>Create a New Event</h2>
+      <form method="POST">
+        <input type="text" name="name" placeholder="Event Name" required>
+        <input type="date" name="date" required>
+        <input type="text" name="location" placeholder="Location" required>
+        <input type="number" name="tickets" placeholder="Tickets Available" required min="1">
+        <button type="submit">Add Event</button>
+      </form>
+    </section>
+
+    <!-- Event List -->
+    <section class="event-list">
+      <h2>Upcoming Events</h2>
+      {% if events %}
+        <ul>
+          {% for event in events %}
+            <li>
+              <strong>{{ event.name }}</strong><br>
+              📅 {{ event.date }}<br>
+              📍 {{ event.location }}<br>
+              🎟️ {{ event.tickets_available }} tickets left
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No events currently available.</p>
+      {% endif %}
+    </section>
+
+    <!-- Ticket Booking Section -->
     <section class="event-booking">
-      <h2>Event Booking</h2>
+      <h2>Book Tickets</h2>
       <form id="booking-form">
         <label for="tickets">Number of Tickets:</label>
         <input type="number" id="tickets" name="tickets" required min="1">
