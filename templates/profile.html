@@ -2,44 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ficketmaster - Profile</title>
+  <title>Your Profile - Ficketmaster</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
   <header>
-    <h1>Your Profile</h1>
+    <h1>Ficketmaster</h1>
     <nav>
       <a href="/">Home</a>
       <a href="/events">Events</a>
-      <a href="/profile">Profile</a>
+      <a href="/logout">Logout</a>
     </nav>
   </header>
-  
+
   <main>
-    <section class="profile-details">
-      <h2>Profile Information</h2>
-      <p>Name: John Doe</p>
-      <p>Email: john.doe@example.com</p>
-      <p>Date of Birth: 1990-01-01</p>
-      <p>Bio: Hello, I'm John!</p>
-      <button id="edit-profile">Edit Profile</button>
-    </section>
+    <div class="profile-card">
+      <h2>Welcome, {{ user.name }} 👋</h2>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Date of Birth:</strong> {{ user.dob.strftime('%B %d, %Y') }}</p>
+      <p><strong>Bio:</strong> {{ user.bio if user.bio else "No bio added yet." }}</p>
 
-    <section class="booking-history">
-      <h3>Booking History</h3>
-      <ul>
-        <li>🎫 Comedy Night - 2 Tickets - May 10, 2025</li>
-        <li>🎫 Jazz Concert - 1 Ticket - April 30, 2025</li>
-      </ul>
-    </section>
-
-    <section class="saved-events">
-      <h3>Saved Events</h3>
-      <p>You haven’t saved any events yet.</p>
-    </section>
+      <a href="#" class="btn">Edit Profile</a>
+    </div>
   </main>
-
-  <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
