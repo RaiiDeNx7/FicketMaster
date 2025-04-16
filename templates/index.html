@@ -5,6 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ficketmaster - Event Listings</title>
   <link rel="stylesheet" href="/static/style.css">
+  <style>
+    .page-wrapper {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    .sidebar {
+      width: 15%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar img {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .content {
+      width: 70%;
+    }
+
+    @media (max-width: 768px) {
+      .page-wrapper {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .sidebar {
+        flex-direction: row;
+        justify-content: space-around;
+        width: 100%;
+      }
+
+      .sidebar img {
+        width: 45%;
+      }
+
+      .content {
+        width: 100%;
+      }
+    }
+  </style>
+
 </head>
 <body>
   <header>
@@ -22,6 +68,13 @@
     </nav>
   </header>
 
+  <div class="page-wrapper">
+    <!-- Left Sidebar with 2 Images -->
+    <aside class="sidebar">
+      <img src="/static/images/Stadium.jpeg" alt="Stadium">
+      <img src="/static/images/Concert.jpeg" alt="Concert">
+    </aside>
+  
   <main>
     {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -46,6 +99,14 @@
       </ul>
     </section>
   </main>
+ 
+  <!-- Right Sidebar with 2 Images -->
+ <aside class="sidebar">
+  <img src="/static/images/nbaStadium.jpeg" alt="NBA Stadium">
+  <img src="/static/images/Concert2.jpeg" alt="Concert2">
+</aside>
+</div>
+
 
   <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
