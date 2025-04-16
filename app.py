@@ -177,6 +177,47 @@ def get_profile(user_id):
         })
     return jsonify({"message": "User not found"}), 404
 
+@app.route('/api/events/<int:event_id>', methods=['GET'])
+def get_event_details(event_id):
+    event = Event.query.get_or_404(event_id)
+    return jsonify({
+        'id': event.id,
+        'name': event.name,
+        'date': event.date,
+        'location': event.location,
+        'price': event.price,
+        'tickets_available': event.tickets_available
+    })
+
+@app.route('/booking/<int:event_id>')
+def booking_page(event_id):
+    event = Event.query.get_or_404(event_id)
+    return render_template('booking.html', event=event)
+
+
+@app.route('/api/book', methods=['POST'])
+def book_ticket():
+    data = request.get_json()
+    event_id = data['event_id']
+    user_id = data['user_id']
+    tickets = data['tickets']
+
+    event = Event.query.get_or_404(event_id)
+    if event.tickets_available < tickets:
+        return jsonify({'message': 'Not enough tickets available.'}), 400
+
+    # Reduce available tickets
+    event.tickets_available -= tickets
+    db.session.commit()
+
+    # Optionally, create a booking record in your database
+    booking = Booking(user_id=user_id, event_id=event_id, tickets=tickets)
+    db.session.add(booking)
+    db.session.commit()
+
+    return jsonify({'message': 'Tickets booked successfully!'})
+
+
 # Run the app
 if __name__ == '__main__':
     if not os.path.exists('ficketmaster.db'):

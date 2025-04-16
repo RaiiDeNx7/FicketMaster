@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Tickets - {{ event.name }}</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/js/booking.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Ficketmaster</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/events">Events</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="event-details">
+      <h2>{{ event.name }}</h2>
+      <p><strong>Date:</strong> {{ event.date }}</p>
+      <p><strong>Location:</strong> {{ event.location }}</p>
+      <p><strong>Tickets Available:</strong> {{ event.tickets_available }}</p>
+      <p><strong>Price per Ticket:</strong> ${{ event.price }}</p>
+
+      <form id="booking-form">
+        <label for="tickets">Number of Tickets:</label>
+        <input type="number" id="tickets" min="1" max="{{ event.tickets_available }}" required>
+      
+        <input type="hidden" id="event-id" value="{{ event.id }}">
+        <input type="hidden" id="user-id" value="1"> <!-- Replace dynamically -->
+      
+        <button type="submit">Buy Tickets</button>
+      </form>      
+    </div>
+  </main>
+</body>
+</html>
+
