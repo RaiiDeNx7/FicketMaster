@@ -25,6 +25,7 @@
         <input type="date" name="date" required>
         <input type="text" name="location" placeholder="Location" required>
         <input type="number" name="tickets" placeholder="Tickets Available" required min="1">
+        <input type="number" step="0.01" name="price" required>
         <button type="submit">Add Event</button>
       </form>
     </section>
@@ -33,30 +34,26 @@
     <section class="event-list">
       <h2>Upcoming Events</h2>
       {% if events %}
-        <ul>
-          {% for event in events %}
-            <li>
-              <strong>{{ event.name }}</strong><br>
-              📅 {{ event.date }}<br>
-              📍 {{ event.location }}<br>
-              🎟️ {{ event.tickets_available }} tickets left
-            </li>
-          {% endfor %}
-        </ul>
+      <ul>
+        {% for event in events %}
+          <li>
+            <strong>{{ event.name }}</strong><br>
+            📅 {{ event.date }}<br>
+            📍 {{ event.location }}<br>
+            {% if event.price is not none %}
+              💰 ${{ "%.2f" | format(event.price) }}<br>
+            {% else %}
+                💰 Price not available<br>
+            {% endif %}
+            🎟️ {{ event.tickets_available }} tickets left
+          </li>
+        {% endfor %}
+      </ul>      
       {% else %}
         <p>No events currently available.</p>
       {% endif %}
     </section>
 
-    <!-- Ticket Booking Section -->
-    <section class="event-booking">
-      <h2>Book Tickets</h2>
-      <form id="booking-form">
-        <label for="tickets">Number of Tickets:</label>
-        <input type="number" id="tickets" name="tickets" required min="1">
-        <button type="submit">Book Tickets</button>
-      </form>
-    </section>
   </main>
 
   <script src="{{ url_for('static', filename='app.js') }}"></script>

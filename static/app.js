@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const eventList = document.getElementById('event-list');
         events.forEach(event => {
           const li = document.createElement('li');
-          li.innerHTML = `${event.name} - <button onclick="bookTickets(${event.id})">Book Now</button>`;
+          li.innerHTML = `${event.name} - $${event.price.toFixed(2)} <button onclick="bookTickets(${event.id})">Book Now</button>`;
           eventList.appendChild(li);
         });
       });

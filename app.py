@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from datetime import datetime
+from flask_migrate import Migrate
+
 
 
 app = Flask(__name__, static_folder='static')
@@ -12,6 +14,8 @@ app.secret_key = 'your_secret_key_here'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ficketmaster.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
 
 # Models
 class User(db.Model):
@@ -31,6 +35,12 @@ class Event(db.Model):
     date = db.Column(db.String(20))
     location = db.Column(db.String(120))
     tickets_available = db.Column(db.Integer)
+    price = db.Column(db.Float, default=0.0)  # Make sure price is included
+
+    def __repr__(self):
+        return f'<Event {self.name}>'
+
+
 
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -50,16 +60,25 @@ def events_page():
         date = request.form['date']
         location = request.form['location']
         tickets = int(request.form['tickets'])
+        # Make sure to get the price as a float from the form
+        price = request.form.get('price', type=float)  # This will get the price and convert it to a float
 
-        new_event = Event(name=name, date=date, location=location, tickets_available=tickets)
+        # If no price is provided, you can set a default value here
+        if price is None:
+            price = 0.0  # You can set a default value for price if it's not provided
+
+        # Now create a new event with the price included
+        new_event = Event(name=name, date=date, location=location, tickets_available=tickets, price=price)
         db.session.add(new_event)
         db.session.commit()
         flash('New event created!')
 
         return redirect(url_for('events_page'))
 
+    # This part retrieves all events for display
     all_events = Event.query.all()
     return render_template('events.html', events=all_events)
+
 
 @app.route('/profile')
 def profile_page():
@@ -113,7 +132,6 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('index'))
 
-# API endpoints
 @app.route('/api/events', methods=['GET'])
 def get_events():
     events = Event.query.all()
@@ -122,8 +140,10 @@ def get_events():
         "name": e.name,
         "date": e.date,
         "location": e.location,
-        "tickets_available": e.tickets_available
+        "tickets_available": e.tickets_available,
+        "price": e.price  # Ensure the price field is being returned
     } for e in events])
+
 
 @app.route('/api/book', methods=['POST'])
 def book_tickets():
