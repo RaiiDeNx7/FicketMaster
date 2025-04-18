@@ -1,30 +1,28 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-import os
-from datetime import datetime
 from flask_migrate import Migrate
-
-
+from datetime import datetime
+import os
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'your_secret_key_here'
 
-# Database config
+# Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ficketmaster.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+# MODELS
 
-# Models
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     dob = db.Column(db.Date, nullable=False)
     bio = db.Column(db.String(500), default="")
-    password = db.Column(db.String(100), nullable=False)  # Add password field
+    password = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
         return f'<User {self.name}>'
@@ -35,20 +33,23 @@ class Event(db.Model):
     date = db.Column(db.String(20))
     location = db.Column(db.String(120))
     tickets_available = db.Column(db.Integer)
-    price = db.Column(db.Float, default=0.0)  # Make sure price is included
+    price = db.Column(db.Float, default=0.0)
 
     def __repr__(self):
         return f'<Event {self.name}>'
 
-
-
-class Booking(db.Model):
+class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
-    event_id = db.Column(db.Integer)
-    tickets = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
 
-# Routes
+    user = db.relationship('User', backref='tickets')
+    event = db.relationship('Event', backref='tickets')
+
+
+# ROUTES
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -60,33 +61,54 @@ def events_page():
         date = request.form['date']
         location = request.form['location']
         tickets = int(request.form['tickets'])
-        # Make sure to get the price as a float from the form
-        price = request.form.get('price', type=float)  # This will get the price and convert it to a float
+        price = request.form.get('price', type=float) or 0.0
 
-        # If no price is provided, you can set a default value here
-        if price is None:
-            price = 0.0  # You can set a default value for price if it's not provided
-
-        # Now create a new event with the price included
         new_event = Event(name=name, date=date, location=location, tickets_available=tickets, price=price)
         db.session.add(new_event)
         db.session.commit()
         flash('New event created!')
-
         return redirect(url_for('events_page'))
 
-    # This part retrieves all events for display
     all_events = Event.query.all()
     return render_template('events.html', events=all_events)
 
+@app.route('/booking/<int:event_id>')
+def booking_page(event_id):
+    event = Event.query.get_or_404(event_id)
+    return render_template('booking.html', event=event)
 
-@app.route('/profile')
-def profile_page():
-    if 'user_id' not in session:
-        flash("Please log in to view your profile.")
-        return redirect(url_for('login'))
-    user = User.query.get(session['user_id'])
-    return render_template('profile.html', user=user)
+@app.route('/api/book', methods=['POST'])
+def book_tickets():
+    try:
+        user_id = int(request.form.get('user_id'))
+        event_id = int(request.form.get('event_id'))
+        tickets_requested = int(request.form.get('tickets'))
+    except (TypeError, ValueError):
+        flash("Invalid input. Please try again.")
+        return redirect(url_for('events_page'))
+
+    user = User.query.get(user_id)
+    event = Event.query.get(event_id)
+
+    if not user or not event:
+        flash("User or Event not found.")
+        return redirect(url_for('events_page'))
+
+    if tickets_requested <= 0:
+        flash("Please select at least one ticket.")
+        return redirect(url_for('booking_page', event_id=event.id))
+
+    if event.tickets_available < tickets_requested:
+        flash("Not enough tickets available.")
+        return redirect(url_for('booking_page', event_id=event.id))
+
+    event.tickets_available -= tickets_requested
+    ticket = Ticket(user_id=user.id, event_id=event.id, quantity=tickets_requested)
+    db.session.add(ticket)
+    db.session.commit()
+
+    flash(f"Successfully booked {tickets_requested} ticket(s) for {event.name}!")
+    return redirect(url_for('profile_page'))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -132,37 +154,15 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('index'))
 
-@app.route('/api/events', methods=['GET'])
-def get_events():
-    events = Event.query.all()
-    return jsonify([{
-        "id": e.id,
-        "name": e.name,
-        "date": e.date,
-        "location": e.location,
-        "tickets_available": e.tickets_available,
-        "price": e.price  # Ensure the price field is being returned
-    } for e in events])
+@app.route('/profile')
+def profile_page():
+    if 'user_id' not in session:
+        flash("Please log in to view your profile.")
+        return redirect(url_for('login'))
 
-
-@app.route('/api/book', methods=['POST'])
-def book_tickets():
-    data = request.get_json()
-    user_id = data.get('user_id')
-    event_id = data.get('event_id')
-    tickets = data.get('tickets')
-
-    event = Event.query.get(event_id)
-    if not event:
-        return jsonify({"message": "Event not found"}), 404
-    if event.tickets_available < tickets:
-        return jsonify({"message": "Not enough tickets available"}), 400
-
-    event.tickets_available -= tickets
-    booking = Booking(user_id=user_id, event_id=event_id, tickets=tickets)
-    db.session.add(booking)
-    db.session.commit()
-    return jsonify({"message": "Tickets booked successfully!"}), 201
+    user = User.query.get(session['user_id'])
+    tickets = Ticket.query.filter_by(user_id=user.id).all()
+    return render_template('profile.html', user=user, tickets=tickets)
 
 @app.route('/api/profile/<int:user_id>', methods=['GET'])
 def get_profile(user_id):
@@ -172,10 +172,22 @@ def get_profile(user_id):
             "id": user.id,
             "name": user.name,
             "email": user.email,
-            "dob": user.dob,
+            "dob": user.dob.isoformat(),
             "bio": user.bio
         })
     return jsonify({"message": "User not found"}), 404
+
+@app.route('/api/events', methods=['GET'])
+def get_events():
+    events = Event.query.all()
+    return jsonify([{
+        "id": e.id,
+        "name": e.name,
+        "date": e.date,
+        "location": e.location,
+        "tickets_available": e.tickets_available,
+        "price": e.price
+    } for e in events])
 
 @app.route('/api/events/<int:event_id>', methods=['GET'])
 def get_event_details(event_id):
@@ -189,34 +201,6 @@ def get_event_details(event_id):
         'tickets_available': event.tickets_available
     })
 
-@app.route('/booking/<int:event_id>')
-def booking_page(event_id):
-    event = Event.query.get_or_404(event_id)
-    return render_template('booking.html', event=event)
-
-
-@app.route('/api/book', methods=['POST'])
-def book_ticket():
-    data = request.get_json()
-    event_id = data['event_id']
-    user_id = data['user_id']
-    tickets = data['tickets']
-
-    event = Event.query.get_or_404(event_id)
-    if event.tickets_available < tickets:
-        return jsonify({'message': 'Not enough tickets available.'}), 400
-
-    # Reduce available tickets
-    event.tickets_available -= tickets
-    db.session.commit()
-
-    # Optionally, create a booking record in your database
-    booking = Booking(user_id=user_id, event_id=event_id, tickets=tickets)
-    db.session.add(booking)
-    db.session.commit()
-
-    return jsonify({'message': 'Tickets booked successfully!'})
-
 
 # Run the app
 if __name__ == '__main__':
@@ -224,3 +208,4 @@ if __name__ == '__main__':
         with app.app_context():
             db.create_all()
     app.run(debug=True)
+

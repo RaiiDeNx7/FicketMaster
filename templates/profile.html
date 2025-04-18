@@ -33,6 +33,25 @@
         <a href="/edit-profile" class="btn edit-btn">Edit Profile</a>
       </div>
     </div>
+
+    <h2>Your Tickets</h2>
+          {% if tickets %}
+            <ul>
+              {% for ticket in tickets %}
+              <li>
+                  {{ ticket.quantity }} ticket(s) to <strong>{{ ticket.event.name }}</strong>
+                  on {{ ticket.event.date }} at {{ ticket.event.location }}
+              </li>
+          {% endfor %}
+            </ul>
+          {% else %}
+            <p>You haven't booked any tickets yet.</p>
+          {% endif %}
+
+          <p><a href="{{ url_for('events_page') }}">Browse More Events</a></p>
+          <p><a href="{{ url_for('logout') }}">Logout</a></p>
+          
   </main>
 </body>
 </html>
+
