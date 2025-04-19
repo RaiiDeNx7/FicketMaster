@@ -16,6 +16,16 @@
     </nav>
   </header>
 
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class="flashes">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
   <main>
     <div class="auth-form">
       <h2>Sign Up</h2>

@@ -121,8 +121,9 @@ def signup():
         bio = request.form.get('bio', '')
 
         if User.query.filter_by(email=email).first():
-            flash('Email already registered.')
-            return redirect(url_for('signup'))
+            flash("Email already registered.")
+            return redirect(url_for('signup'))  # Not 'index'
+
 
         hashed_pw = generate_password_hash(password)
         new_user = User(name=name, email=email, dob=dob, password=hashed_pw, bio=bio)
@@ -145,6 +146,7 @@ def login():
             flash('Logged in successfully!')
             return redirect(url_for('index'))
         flash('Invalid email or password.')
+        return redirect(url_for('login'))
 
     return render_template('login.html')
 
