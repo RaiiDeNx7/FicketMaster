@@ -110,20 +110,31 @@ def book_tickets():
     flash(f"Successfully booked {tickets_requested} ticket(s) for {event.name}!")
     return redirect(url_for('profile_page'))
 
+from datetime import datetime
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
         dob_str = request.form['dob']
-        dob = datetime.strptime(dob_str, '%Y-%m-%d').date()
         password = request.form['password']
         bio = request.form.get('bio', '')
 
+        # Validate DOB format and ensure it's in the past
+        try:
+            dob = datetime.strptime(dob_str, '%Y-%m-%d').date()
+            if dob >= datetime.today().date():
+                flash("Date of birth must be in the past.")
+                return redirect(url_for('signup'))
+        except ValueError:
+            flash("Invalid date format for date of birth.")
+            return redirect(url_for('signup'))
+
+        # Check for existing user
         if User.query.filter_by(email=email).first():
             flash("Email already registered.")
-            return redirect(url_for('signup'))  # Not 'index'
-
+            return redirect(url_for('signup'))
 
         hashed_pw = generate_password_hash(password)
         new_user = User(name=name, email=email, dob=dob, password=hashed_pw, bio=bio)
@@ -133,6 +144,7 @@ def signup():
         return redirect(url_for('login'))
 
     return render_template('signup.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
