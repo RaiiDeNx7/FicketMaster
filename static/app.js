@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Create a new list item for each event and display its name, price, and a "Book Now" button
         const li = document.createElement('li');
         li.innerHTML = `
-          ${event.name} - $${event.price.toFixed(2)}  // Display event name and formatted price
-          <button onclick="window.location.href='/booking/${event.id}'">Book Now</button>  // Button to navigate to the booking page for the specific event
+          ${event.name} - $${event.price.toFixed(2)}
+          <button onclick="window.location.href='/booking/${event.id}'">Book Now</button>
         `;
         eventList.appendChild(li);  // Add the event to the list in the DOM
       });
