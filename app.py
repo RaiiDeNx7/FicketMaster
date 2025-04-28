@@ -234,11 +234,13 @@ def get_event_details(event_id):
         'tickets_available': event.tickets_available
     })
 
-# Run the app
+#Run App
 if __name__ == '__main__':
     # Create the database if it doesn't exist
     if not os.path.exists('ficketmaster.db'):
         with app.app_context():
             db.create_all()
-    app.run(debug=True)  # Start the Flask application in debug mode
+    app.run(host="0.0.0.0", port=5000, debug=True)  # Start the Flask application
+
+
 
