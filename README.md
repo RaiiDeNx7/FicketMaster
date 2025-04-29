@@ -52,6 +52,8 @@ py -m app
 
 3. Visit Site In Browser
 Go to http://127.0.0.1:5000
+Go to http://[Private IP]:5000
+
 
 
 
